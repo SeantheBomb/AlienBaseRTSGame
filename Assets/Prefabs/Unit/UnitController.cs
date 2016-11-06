@@ -8,6 +8,10 @@ public class UnitController : Entity {
 
     public UnitAbilities abilities;
 
+    public bool harvesting;
+
+    public ResourceNode targetNode = null;
+
     //public float speed;
     public float range;
 
@@ -43,9 +47,14 @@ public class UnitController : Entity {
         {
             moveToWaypoint();
         }
+        if (harvesting)
+        {
+            harvestNode(targetNode);
+        }
         else
         {
             attackClosestEnemy();
+            
         }
 	}
 
@@ -196,6 +205,26 @@ public class UnitController : Entity {
             //Move towards target
             setNavPosition(waypoint.position);
         }
+    }
+
+    public void harvestNode(ResourceNode node)
+    {
+        if (!(node))
+        {
+            harvesting = false;
+            this.targetNode = null;
+            return;
+        }
+        if (Vector3.Distance(transform.position, node.transform.position)<=3f)
+        {
+            this.cancelNav();
+            if (waypoint.gameObject.activeSelf == true)
+            {
+                harvesting = false;
+            }
+            node.takeResources(abilities.mining);
+        }
+        
     }
 
 }

@@ -112,6 +112,7 @@ public class PlayerController : MonoBehaviour {
                 {
                     EnemyController enemy;
                     Critter critter;
+                    ResourceNode node;
                     if (Type<EnemyController>.isType(clickHitBox.parent.gameObject, out enemy))
                     {
                         attack(enemy);
@@ -119,6 +120,10 @@ public class PlayerController : MonoBehaviour {
                     else if (Type<Critter>.isType(clickHitBox.parent.gameObject, out critter))
                     {
                         attack(critter);
+                    }
+                    else if (Type<ResourceNode>.isType(clickHitBox.parent.gameObject, out node))
+                    {
+                        targetResource(node);
                     }
                     
                 }
@@ -311,6 +316,18 @@ public class PlayerController : MonoBehaviour {
                 unit.target = null;
             else
                 unit.target = critter.transform;
+        }
+    }
+
+    public void targetResource(ResourceNode node)
+    {
+        foreach (UnitController unit in SelectedUnits)
+        {
+            unit.setWaypoint(node.transform.position);
+            unit.target = node.transform;
+            unit.targetNode = node;
+            unit.harvesting = true;
+            unit.harvestNode(node);
         }
     }
 
