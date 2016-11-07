@@ -38,10 +38,13 @@ public class GunController : MonoBehaviour {
 	void Update () {
         if (cooldown > 0)
             cooldown -= Time.deltaTime;
-        if (DayNightCycle.timeOfDay == TimeOfDay.Night)
-            torch.intensity = 8;
-        else
-            torch.intensity = 0;
+        if (torch != null)
+        {
+            if (DayNightCycle.timeOfDay == TimeOfDay.Night)
+                torch.intensity = 8;
+            else
+                torch.intensity = 0;
+        }
     }
 
     public Entity shoot()
@@ -65,7 +68,7 @@ public class GunController : MonoBehaviour {
                         return null;
                     EnemyController enemy;
                     if (Type<EnemyController>.isType(reciever.transform, out enemy))
-                        enemy.takeDamage(damage, parentUID);
+                        enemy.entity.takeDamage(damage, parentUID);
                     else
                         reciever.takeDamage(damage);
                 }

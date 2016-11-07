@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Critter : Entity {
+public class Critter : MonoBehaviour{
+
+    public Entity entity;
 
     public float energy = 0;
     public float maxEnergy = 100f;
@@ -30,7 +32,7 @@ public class Critter : Entity {
 
 	// Use this for initialization
 	void Start () {
-        base.Start();
+        entity = Entity.RequireEntity(this.gameObject);
 	    //Make sure we're in the crittersByType list
         if(crittersByType == null)
         {
@@ -43,36 +45,27 @@ public class Critter : Entity {
         crittersByType[critterType].Add(this);
         energy = maxEnergy;
         model = transform.GetChild(0);
-        setUID();
 	}
 
-    public override void die()
+    public void OnDeath()
     {
         //Remove us from the crittersByType list
         crittersByType[critterType].Remove(this);
         //Resource.addResource(Resource.Type.Food, foodVal);
-        FindObjectOfType<CritterSpawner>().Kill(this.UID);
+        FindObjectOfType<CritterSpawner>().Kill(entity.UID);
     }
 
-    public override void die(int pingUID)
-    {
-        //Remove us from the crittersByType list
-        crittersByType[critterType].Remove(this);
-        Resource.addResource(Resource.Type.Food, foodVal);
-        PingEntity(pingUID);
-        FindObjectOfType<CritterSpawner>().Kill(this.UID);
-    }
 
-    public override bool PingEntity(int pingUID)
+    public bool PingEntity(int pingUID)
     {
         try
         {
             UnitController e;
-            if (Type<UnitController>.isType(FindUID(pingUID).gameObject, out e))
+            if (Type<UnitController>.isType(Entity.FindUID(pingUID).gameObject, out e))
             {
                 e.target = null;
                 e.abilities.killedEnemy(xpVal);
-                Debug.Log("Ping found: " + e.showName + " " + e.UID);
+                Debug.Log("Ping found: " + e.entity.showName + " " + e.entity.UID);
                 return true;
             }
             return false;
@@ -94,15 +87,15 @@ public class Critter : Entity {
 
         if(energy <= 0)
         {
-            health = Mathf.Clamp(health - Time.deltaTime * energyPerSecond, 0, maxHealth);
+            entity.health = Mathf.Clamp(entity.health - Time.deltaTime * energyPerSecond, 0, entity.maxHealth);
         }
 
-        if(health <= 0)
+        if(entity.health <= 0)
         {
             if (lastHitUID < 0)
-                die();
+                entity.die();
             else
-                die(lastHitUID);
+                entity.die(lastHitUID);
             return;
         }
 

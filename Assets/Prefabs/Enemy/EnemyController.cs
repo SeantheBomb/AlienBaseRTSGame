@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyController : Entity {
+public class EnemyController : MonoBehaviour {
+
+    public Entity entity;
 
     public float damage;
     public int xpVal;
@@ -17,7 +19,7 @@ public class EnemyController : Entity {
 
 	// Use this for initialization
 	void Start () {
-        base.Start();
+        entity = Entity.RequireEntity(this.gameObject);
         spawnPoint = transform.position;
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
@@ -38,19 +40,8 @@ public class EnemyController : Entity {
         attackEnemy();
 	}
 
-    public override void die(int pingUID)
-    {
-        isDead = true;
-        targ = null;
-        nav.Stop();
-        nav.enabled = false;
-        anim.SetTrigger("die");
-        PingEntity(pingUID);
-        Invoke("killThisMoFo", 5f);
-        this.enabled = false;
-    }
 
-    public override void die()
+    public void OnDeath()
     {
         isDead = true;
         targ = null;
@@ -64,25 +55,24 @@ public class EnemyController : Entity {
     public void killThisMoFo()
     {
 
-        FindObjectOfType<EnemySpawn>().Kill(this.UID);
+        FindObjectOfType<EnemySpawn>().Kill(entity.UID);
     }
 
-    public override void takeDamage(float dam, int pingUID)
+    public void OnDamageTaken()
     {
         GetComponent<AudioSource>().Play();
-        base.takeDamage(dam, pingUID);
     }
 
-    public override bool PingEntity(int pingUID)
+    public bool PingEntity(int pingUID)
     {
         try
         {
             UnitController e;
-            if (Type<UnitController>.isType(FindUID(pingUID).gameObject, out e))
+            if (Type<UnitController>.isType(Entity.FindUID(pingUID).gameObject, out e))
             {
                 e.target = null;
                 e.abilities.killedEnemy(xpVal);
-                Debug.Log("Ping found: " + e.showName + " " + e.UID);
+                Debug.Log("Ping found: " + e.entity.showName + " " + e.entity.UID);
                 return true;
             }
             return false;

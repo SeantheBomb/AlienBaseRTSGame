@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour {
     public Director director;
 
     //private int curDay;
-    private Entity placing = null;
+    private GameObject placing = null;
     private bool isPlacing = false;
 
     public RectTransform dragSelectUI;
@@ -159,7 +159,7 @@ public class PlayerController : MonoBehaviour {
     {
         if (strucProto[struc].buildingMaterialCost <= Resource.BuildingMaterial.amount && strucProto[struc].powerCost+Resource.Power.amount <= Resource.Power.capacity)
         {
-            placing = strucProto[struc];
+            placing = strucProto[struc].gameObject;
             isPlacing = true;
         }
     }
@@ -253,7 +253,7 @@ public class PlayerController : MonoBehaviour {
     {
         if (director.allUnits.Length < Resource.Food.amount)
         {
-            placing = unitProto[unit];
+            placing = unitProto[unit].gameObject;
             isPlacing = true;
         }
     }

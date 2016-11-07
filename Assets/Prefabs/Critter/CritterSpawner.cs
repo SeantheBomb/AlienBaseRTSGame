@@ -90,7 +90,7 @@ public class CritterSpawner : MonoBehaviour {
             if (wc.pool.despawn(obj.gameObject))
                 return;
         }
-        UILog.AddText("Failed to kill" + obj.name + obj.UID);
+        UILog.AddText("Failed to kill" + obj.name + obj.entity.UID);
     }
 
     public void Kill(int uid)

@@ -91,7 +91,7 @@ public class EnemySpawn : MonoBehaviour {
             if (wc.enemyPool.despawn(obj.gameObject))
                 return;
         }
-        UILog.AddText("Failed to kill" + obj.name + obj.UID);
+        UILog.AddText("Failed to kill" + obj.name + obj.entity.UID);
     }
 
     public void Kill(int uid)
