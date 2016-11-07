@@ -3,7 +3,9 @@ using System.Collections;
 
 
 
-public class StructureController : Entity {
+public class StructureController : MonoBehaviour {
+
+    public Entity entity;
 
     public int buildingMaterialCost;
     public int powerCost;
@@ -13,7 +15,7 @@ public class StructureController : Entity {
 
 	// Use this for initialization
 	void Start () {
-        base.Start();
+        entity = Entity.RequireEntity(this.gameObject);
         isDepleted = false;
 	}
 	
@@ -22,15 +24,13 @@ public class StructureController : Entity {
 	
 	}
 
-    public override int levelUp()
+    public void OnLevelUp()
     {
-        health += 20;
-        return base.levelUp();
+        entity.health += 20;
     }
 
-    public override void die()
+    public void OnDeath()
     {
         GetComponent<AudioSource>().Play();
-        base.die();
     }
 }

@@ -8,7 +8,6 @@ public class GuardPostController : DefenseController {
 
 	// Use this for initialization
 	void Start () {
-        setUID();
         guardSlots = gameObject.GetComponentsInChildren<GuardSlot>();
 	}
 	
@@ -52,13 +51,13 @@ public class GuardPostController : DefenseController {
         return units;
     }
 
-    public override void die()
+    public new void OnDeath()
     {
         Debug.Log("Guard Post destroyed!");
         foreach (GuardSlot g in guardSlots)
         {
             if(g.unit != null)
-                g.unit.die();
+                g.unit.entity.die();
         }
         Destroy(gameObject);
     }

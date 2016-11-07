@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Nature : Entity {
+public class Nature : MonoBehaviour {
 
     public string NatureType = "Hedge";
 
@@ -15,7 +15,6 @@ public class Nature : Entity {
 
     // Use this for initialization
     void Start () {
-        base.Start();
         //Make sure we're in the NatureByType list
         if (NatureByType == null)
         {
@@ -29,18 +28,12 @@ public class Nature : Entity {
         model = transform.GetChild(0);
     }
 
-    public override void die()
+    public void OnDeath()
     {
         NatureByType[NatureType].Remove(this);
-        base.die();
     }
 
-    public override void die(int pingUID)
-    {
-        //Remove us from the crittersByType list
-        NatureByType[NatureType].Remove(this);
-        base.die(pingUID);
-    }
+
 
     // Update is called once per frame
     void Update () {

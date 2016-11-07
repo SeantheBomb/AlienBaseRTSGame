@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UnitController : Entity {
+public class UnitController : MonoBehaviour {
+
+    public Entity entity;
 
     public bool isSelected = false;
     public GuardSlot guard = null;
@@ -25,12 +27,12 @@ public class UnitController : Entity {
 
 	// Use this for initialization
 	void Start () {
-        base.Start();
+        entity = Entity.RequireEntity(this.gameObject);
         anim = GetComponentInChildren<Animator>();
-        abilities = new UnitAbilities(UID);
+        abilities = new UnitAbilities(entity.UID);
         gun = GetComponentInChildren<GunController>();
         waypoint = Instantiate(waypoint);
-        waypoint.GetComponent<WaypointController>().UID = UID;
+        waypoint.GetComponent<WaypointController>().UID = entity.UID;
         waypoint.gameObject.SetActive(false);
         savedRange = range;
         nav = GetComponent<NavMeshAgent>();
@@ -126,28 +128,25 @@ public class UnitController : Entity {
         WaypointController w;
         if (Type<WaypointController>.isType(other.transform, out w))
         {
-            if (w.UID == UID)
+            if (w.UID == entity.UID)
                 cancelNav();
         }
     }
 
-    public override int levelUp()
+    public void OnLevelUp()
     {
         SendMessage("levelUpAbilities", SendMessageOptions.DontRequireReceiver);
-        return base.levelUp();
     }
 
-    public override void takeDamage(float dam)
+    public void OnDamageTaken()
     {
         GetComponent<AudioSource>().Play();
-        base.takeDamage(dam);
     }
 
-    public override void die()
+    public void OnDeath()
     {
-        UILog.AddText("Unit: " + UID.ToString() + " has died!");
+        UILog.AddText("Unit: " + entity.UID.ToString() + " has died!");
         Destroy(waypoint.gameObject);
-        Destroy(gameObject);
     }
 
     private void attackClosestEnemy()

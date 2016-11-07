@@ -16,7 +16,6 @@ public class TurretController : DefenseController
 
 	// Use this for initialization
 	void Start () {
-        setUID();
         gun = GetComponentInChildren<GunController>();
         //head = GetComponentInChildren<Transform>();
         gun.range = range;
@@ -76,11 +75,10 @@ public class TurretController : DefenseController
         return minEnemy.transform;
     }
 
-    public override int levelUp()
+    public new void OnLevelUp()
     {
         range += 2;
         accuracy += 2;
         damage += 2;
-        return base.levelUp();
     }
 }
