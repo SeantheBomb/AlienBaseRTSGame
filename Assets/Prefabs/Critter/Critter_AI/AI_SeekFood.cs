@@ -45,8 +45,8 @@ public class AI_SeekFood : AI_Behaviour {
 
         if (dist < eatingRange)
         {
-            float hpEaten = Mathf.Clamp(eatHPPerSec * Time.deltaTime, 0, closest.health);
-            closest.takeDamage(hpEaten);
+            float hpEaten = Mathf.Clamp(eatHPPerSec * Time.deltaTime, 0, closest.entity.health);
+            closest.entity.takeDamage(hpEaten);
             myCritter.energy += hpEaten * eatHPToEnergy;
         }
         else
